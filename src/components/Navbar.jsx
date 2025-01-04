@@ -2,31 +2,93 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
-import LogoutConfirmModal from "./LogoutConfirmModal";
-import Toast from "./Toast";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
 
+const LogoutConfirmModal = ({ isOpen, onClose, onConfirm, darkMode }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div
+                className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+                onClick={onClose}
+            ></div>
+            <div
+                className={`relative w-full max-w-sm p-6 mx-4 rounded-xl shadow-2xl transform transition-all ${
+                    darkMode
+                        ? "bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 border border-blue-500/20"
+                        : "bg-white"
+                }`}
+            >
+                <h3
+                    className={`text-xl font-semibold mb-4 ${
+                        darkMode ? "text-white" : "text-gray-900"
+                    }`}
+                >
+                    Konfirmasi Logout
+                </h3>
+                <p
+                    className={`mb-6 ${
+                        darkMode ? "text-gray-300" : "text-gray-600"
+                    }`}
+                >
+                    Apakah Anda yakin ingin keluar dari akun Anda?
+                </p>
+                <div className="flex justify-end space-x-3">
+                    <button
+                        onClick={onClose}
+                        className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                            darkMode
+                                ? "text-gray-300 hover:bg-gray-800"
+                                : "text-gray-600 hover:bg-gray-100"
+                        }`}
+                    >
+                        Batal
+                    </button>
+                    <button
+                        onClick={onConfirm}
+                        className={`px-4 py-2 rounded-lg font-medium text-white transition-all duration-300 ${
+                            darkMode
+                                ? "bg-red-600 hover:bg-red-700"
+                                : "bg-red-500 hover:bg-red-600"
+                        }`}
+                    >
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [showBackToTop, setShowBackToTop] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showRegister, setShowRegister] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-    const [showToast, setShowToast] = useState(false);
     const { darkMode, toggleDarkMode } = useTheme();
     const location = useLocation();
     const { user, logout } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
-            const currentScrollPos = window.scrollY;
-            setScrolled(currentScrollPos > 20);
+            setShowBackToTop(window.scrollY > 400);
+            setScrolled(window.scrollY > 20);
         };
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    };
 
     const handleSwitchToRegister = () => {
         setShowLogin(false);
@@ -46,7 +108,6 @@ const Navbar = () => {
         try {
             await logout();
             setShowLogoutConfirm(false);
-            setShowToast(true);
         } catch (error) {
             console.error("Error logging out:", error);
         }
@@ -65,11 +126,11 @@ const Navbar = () => {
                 className={`fixed w-full z-50 transition-all duration-700 ease-in-out transform ${
                     scrolled
                         ? darkMode
-                            ? "bg-gray-900/95 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.3)] backdrop-blur-lg border-b border-white/5"
-                            : "bg-gradient-to-r from-blue-950/95 via-blue-900/95 to-blue-950/95 shadow-[0_4px_20px_-3px_rgba(59,130,246,0.3)] backdrop-blur-lg border-b border-white/5"
+                            ? "bg-gray-950/85 backdrop-blur-2xl border-b border-white/5 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)]"
+                            : "bg-gradient-to-r from-blue-950/90 via-blue-900/90 to-blue-950/90 backdrop-blur-2xl border-b border-white/5 shadow-[0_8px_30px_-12px_rgba(29,78,216,0.45)]"
                         : darkMode
-                        ? "bg-gray-950/60 backdrop-blur-sm"
-                        : "bg-blue-950/60 backdrop-blur-sm"
+                        ? "bg-transparent"
+                        : "bg-transparent"
                 }`}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -373,18 +434,36 @@ const Navbar = () => {
                 </div>
             </nav>
 
+            {/* Back to Top Button */}
+            {showBackToTop && (
+                <button
+                    onClick={scrollToTop}
+                    className={`fixed bottom-8 right-8 p-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 z-50 ${
+                        darkMode
+                            ? "bg-gray-800 hover:bg-gray-700 text-blue-400"
+                            : "bg-blue-600 hover:bg-blue-700 text-white"
+                    }`}
+                >
+                    <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M5 10l7-7m0 0l7 7m-7-7v18"
+                        />
+                    </svg>
+                </button>
+            )}
+
             <LogoutConfirmModal
                 isOpen={showLogoutConfirm}
                 onClose={() => setShowLogoutConfirm(false)}
                 onConfirm={handleLogout}
-                darkMode={darkMode}
-            />
-
-            <Toast
-                message="Berhasil logout dari akun"
-                type="success"
-                isVisible={showToast}
-                onClose={() => setShowToast(false)}
                 darkMode={darkMode}
             />
 
