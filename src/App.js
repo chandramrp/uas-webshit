@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import CoursePage from "./pages/CoursePage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import DashboardPage from "./pages/DashboardPage";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
 
@@ -32,6 +33,10 @@ function App() {
                             <Route path="/kursus" element={<CoursePage />} />
                             <Route path="/tentang" element={<AboutPage />} />
                             <Route path="/kontak" element={<ContactPage />} />
+                            <Route
+                                path="/dashboard"
+                                element={<DashboardPage />}
+                            />
                         </Routes>
                         <Footer />
                     </div>
