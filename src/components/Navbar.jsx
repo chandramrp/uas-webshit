@@ -14,18 +14,12 @@ const Navbar = () => {
 
     useEffect(() => {
         const handleScroll = () => {
-            const offset = window.scrollY;
-            if (offset > 50) {
-                setScrolled(true);
-            } else {
-                setScrolled(false);
-            }
+            const currentScrollPos = window.scrollY;
+            setScrolled(currentScrollPos > 20);
         };
 
         window.addEventListener("scroll", handleScroll);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     const handleSwitchToRegister = () => {
@@ -48,14 +42,14 @@ const Navbar = () => {
     return (
         <>
             <nav
-                className={`fixed w-full z-50 transition-all duration-500 ${
+                className={`fixed w-full z-50 transition-all duration-700 ease-in-out transform ${
                     scrolled
                         ? darkMode
-                            ? "bg-gray-900/90 shadow-lg backdrop-blur-md border-b border-gray-800"
-                            : "bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 shadow-lg"
+                            ? "bg-gray-900/95 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.3)] backdrop-blur-lg border-b border-white/5"
+                            : "bg-gradient-to-r from-blue-950/95 via-blue-900/95 to-blue-950/95 shadow-[0_4px_20px_-3px_rgba(59,130,246,0.3)] backdrop-blur-lg border-b border-white/5"
                         : darkMode
-                        ? "bg-gray-900/70 backdrop-blur-sm"
-                        : "bg-blue-900/80 backdrop-blur-sm"
+                        ? "bg-gray-950/60 backdrop-blur-sm"
+                        : "bg-blue-950/60 backdrop-blur-sm"
                 }`}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,7 +57,7 @@ const Navbar = () => {
                         <div className="flex items-center">
                             <Link
                                 to="/"
-                                className={`text-2xl font-bold transform hover:scale-105 transition-all duration-300 cursor-pointer ${
+                                className={`text-xl font-bold transition-all duration-700 ${
                                     darkMode
                                         ? "text-white hover:text-blue-300"
                                         : "text-white hover:text-blue-200"
@@ -82,7 +76,7 @@ const Navbar = () => {
                                     className="relative group"
                                 >
                                     <span
-                                        className={`relative text-white transition-all duration-300 font-medium ${
+                                        className={`relative text-white transition-all duration-700 font-medium ${
                                             darkMode
                                                 ? "hover:text-blue-300"
                                                 : "hover:text-blue-200"
@@ -96,11 +90,11 @@ const Navbar = () => {
                                     >
                                         {item.title}
                                         <span
-                                            className={`absolute -bottom-1 left-0 w-0 h-0.5 ${
+                                            className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-700 ${
                                                 darkMode
-                                                    ? "bg-gradient-to-r from-blue-400 to-indigo-400"
-                                                    : "bg-gradient-to-r from-blue-400 to-indigo-500"
-                                            } group-hover:w-full transition-all duration-300 ${
+                                                    ? "bg-blue-400"
+                                                    : "bg-blue-400"
+                                            } group-hover:w-full ${
                                                 location.pathname === item.path
                                                     ? "w-full"
                                                     : ""
@@ -113,16 +107,16 @@ const Navbar = () => {
                             {/* Dark Mode Toggle Button */}
                             <button
                                 onClick={toggleDarkMode}
-                                className={`p-2 rounded-lg transition-all duration-300 ${
+                                className={`p-2 rounded-lg transition-all duration-500 transform hover:scale-110 ${
                                     darkMode
-                                        ? "bg-gray-800 hover:bg-gray-700 hover:shadow-inner"
-                                        : "bg-blue-800/50 hover:bg-blue-700/50"
+                                        ? "bg-gray-800/50 hover:bg-gray-700/50 hover:shadow-lg hover:shadow-blue-500/20"
+                                        : "bg-blue-800/50 hover:bg-blue-700/50 hover:shadow-lg hover:shadow-blue-300/20"
                                 }`}
                                 aria-label="Toggle Dark Mode"
                             >
                                 {darkMode ? (
                                     <svg
-                                        className="w-6 h-6 text-amber-300 transition-transform duration-500 rotate-0 hover:rotate-180"
+                                        className="w-5 h-5 text-amber-300 transform transition-transform duration-500 rotate-0 hover:rotate-180"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -136,7 +130,7 @@ const Navbar = () => {
                                     </svg>
                                 ) : (
                                     <svg
-                                        className="w-6 h-6 text-blue-100 transition-transform duration-500 hover:rotate-90"
+                                        className="w-5 h-5 text-blue-100 transform transition-transform duration-500 rotate-0 hover:-rotate-180"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -155,9 +149,9 @@ const Navbar = () => {
                             <div className="flex items-center space-x-2">
                                 <button
                                     onClick={() => setShowLogin(true)}
-                                    className={`px-6 py-2 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 ${
+                                    className={`px-4 py-1.5 text-sm text-white font-semibold rounded-lg transition-all duration-300 ${
                                         darkMode
-                                            ? "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 shadow-lg shadow-blue-500/20"
+                                            ? "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400"
                                             : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
                                     }`}
                                 >
@@ -165,10 +159,10 @@ const Navbar = () => {
                                 </button>
                                 <button
                                     onClick={() => setShowRegister(true)}
-                                    className={`px-6 py-2 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 ${
+                                    className={`px-4 py-1.5 text-sm text-white font-semibold rounded-lg transition-all duration-300 ${
                                         darkMode
-                                            ? "border-2 border-blue-400 hover:bg-blue-400/10 shadow-lg shadow-blue-500/10"
-                                            : "border-2 border-blue-500 hover:bg-blue-500/20"
+                                            ? "border border-blue-400 hover:bg-blue-400/10"
+                                            : "border border-blue-500 hover:bg-blue-500/20"
                                     }`}
                                 >
                                     Daftar
@@ -224,11 +218,15 @@ const Navbar = () => {
                             </button>
                             <button
                                 onClick={toggleDarkMode}
-                                className="p-2 rounded-lg bg-blue-800/50 hover:bg-blue-700/50 transition-all duration-300"
+                                className={`p-2 rounded-lg transition-all duration-500 transform hover:scale-110 ${
+                                    darkMode
+                                        ? "bg-gray-800/50 hover:bg-gray-700/50 hover:shadow-lg hover:shadow-blue-500/20"
+                                        : "bg-blue-800/50 hover:bg-blue-700/50 hover:shadow-lg hover:shadow-blue-300/20"
+                                }`}
                             >
                                 {darkMode ? (
                                     <svg
-                                        className="w-5 h-5 text-yellow-300"
+                                        className="w-5 h-5 text-amber-300 transform transition-transform duration-500 rotate-0 hover:rotate-180"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -242,7 +240,7 @@ const Navbar = () => {
                                     </svg>
                                 ) : (
                                     <svg
-                                        className="w-5 h-5 text-gray-200"
+                                        className="w-5 h-5 text-blue-100 transform transition-transform duration-500 rotate-0 hover:-rotate-180"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
