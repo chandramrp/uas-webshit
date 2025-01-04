@@ -42,7 +42,7 @@ const Navbar = () => {
         { title: "Beranda", path: "/" },
         { title: "Kursus", path: "/kursus" },
         { title: "Tentang", path: "/tentang" },
-        { title: "Kontak", path: "/#kontak" },
+        { title: "Kontak", path: "/kontak" },
     ];
 
     return (
