@@ -1,10 +1,22 @@
 import React, { useState } from "react";
 import { useTheme } from "../context/ThemeContext";
 import Register from "./Register";
+import Login from "./Login";
 
 const Hero = () => {
     const { darkMode } = useTheme();
     const [showRegister, setShowRegister] = useState(false);
+    const [showLogin, setShowLogin] = useState(false);
+
+    const handleSwitchToLogin = () => {
+        setShowRegister(false);
+        setShowLogin(true);
+    };
+
+    const handleSwitchToRegister = () => {
+        setShowLogin(false);
+        setShowRegister(true);
+    };
 
     return (
         <div
@@ -70,6 +82,16 @@ const Hero = () => {
                 <Register
                     isOpen={showRegister}
                     onClose={() => setShowRegister(false)}
+                    handleSwitchToLogin={handleSwitchToLogin}
+                />
+            )}
+
+            {/* Login Modal */}
+            {showLogin && (
+                <Login
+                    isOpen={showLogin}
+                    onClose={() => setShowLogin(false)}
+                    handleSwitchToRegister={handleSwitchToRegister}
                 />
             )}
         </div>
