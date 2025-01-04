@@ -300,16 +300,20 @@ const Navbar = () => {
             </nav>
 
             {/* Modals */}
-            <Login
-                isOpen={showLogin}
-                onClose={() => setShowLogin(false)}
-                switchToRegister={handleSwitchToRegister}
-            />
-            <Register
-                isOpen={showRegister}
-                onClose={() => setShowRegister(false)}
-                switchToLogin={handleSwitchToLogin}
-            />
+            {showLogin && (
+                <Login
+                    isOpen={showLogin}
+                    onClose={() => setShowLogin(false)}
+                    handleSwitchToRegister={handleSwitchToRegister}
+                />
+            )}
+            {showRegister && (
+                <Register
+                    isOpen={showRegister}
+                    onClose={() => setShowRegister(false)}
+                    handleSwitchToLogin={handleSwitchToLogin}
+                />
+            )}
         </>
     );
 };
