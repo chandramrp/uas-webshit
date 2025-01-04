@@ -2,15 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
+import LogoutConfirmModal from "./LogoutConfirmModal";
+import Toast from "./Toast";
 import { useTheme } from "../context/ThemeContext";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [showRegister, setShowRegister] = useState(false);
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+    const [showToast, setShowToast] = useState(false);
     const { darkMode, toggleDarkMode } = useTheme();
     const location = useLocation();
+    const { user, logout } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -30,6 +36,20 @@ const Navbar = () => {
     const handleSwitchToLogin = () => {
         setShowRegister(false);
         setShowLogin(true);
+    };
+
+    const handleLogoutClick = () => {
+        setShowLogoutConfirm(true);
+    };
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            setShowLogoutConfirm(false);
+            setShowToast(true);
+        } catch (error) {
+            console.error("Error logging out:", error);
+        }
     };
 
     const menuItems = [
@@ -145,53 +165,109 @@ const Navbar = () => {
                                 )}
                             </button>
 
-                            {/* Login/Register Buttons */}
+                            {/* Login/Register/User Buttons */}
                             <div className="flex items-center space-x-2">
-                                <button
-                                    onClick={() => setShowLogin(true)}
-                                    className={`px-4 py-1.5 text-sm text-white font-semibold rounded-lg transition-all duration-300 ${
-                                        darkMode
-                                            ? "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400"
-                                            : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
-                                    }`}
-                                >
-                                    Login
-                                </button>
-                                <button
-                                    onClick={() => setShowRegister(true)}
-                                    className={`px-4 py-1.5 text-sm text-white font-semibold rounded-lg transition-all duration-300 ${
-                                        darkMode
-                                            ? "border border-blue-400 hover:bg-blue-400/10"
-                                            : "border border-blue-500 hover:bg-blue-500/20"
-                                    }`}
-                                >
-                                    Daftar
-                                </button>
+                                {user ? (
+                                    <>
+                                        <Link
+                                            to="/dashboard"
+                                            className={`px-4 py-1.5 text-sm text-white font-semibold rounded-lg transition-all duration-300 ${
+                                                darkMode
+                                                    ? "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400"
+                                                    : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                                            }`}
+                                        >
+                                            Dashboard
+                                        </Link>
+                                        <button
+                                            onClick={handleLogoutClick}
+                                            className={`px-4 py-1.5 text-sm text-white font-semibold rounded-lg transition-all duration-300 ${
+                                                darkMode
+                                                    ? "border border-blue-400 hover:bg-blue-400/10"
+                                                    : "border border-blue-500 hover:bg-blue-500/20"
+                                            }`}
+                                        >
+                                            Logout
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={() => setShowLogin(true)}
+                                            className={`px-4 py-1.5 text-sm text-white font-semibold rounded-lg transition-all duration-300 ${
+                                                darkMode
+                                                    ? "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400"
+                                                    : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                                            }`}
+                                        >
+                                            Login
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                setShowRegister(true)
+                                            }
+                                            className={`px-4 py-1.5 text-sm text-white font-semibold rounded-lg transition-all duration-300 ${
+                                                darkMode
+                                                    ? "border border-blue-400 hover:bg-blue-400/10"
+                                                    : "border border-blue-500 hover:bg-blue-500/20"
+                                            }`}
+                                        >
+                                            Daftar
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </div>
 
                         {/* Mobile Menu Button */}
                         <div className="md:hidden flex items-center space-x-2">
-                            <button
-                                onClick={() => setShowLogin(true)}
-                                className={`px-4 py-2 text-white font-semibold rounded-lg transition-all duration-300 ${
-                                    darkMode
-                                        ? "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400"
-                                        : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
-                                }`}
-                            >
-                                Login
-                            </button>
-                            <button
-                                onClick={() => setShowRegister(true)}
-                                className={`px-4 py-2 text-white font-semibold rounded-lg transition-all duration-300 ${
-                                    darkMode
-                                        ? "border-2 border-blue-400 hover:bg-blue-400/10"
-                                        : "border-2 border-blue-500 hover:bg-blue-500/20"
-                                }`}
-                            >
-                                Daftar
-                            </button>
+                            {user ? (
+                                <>
+                                    <Link
+                                        to="/dashboard"
+                                        className={`px-4 py-2 text-white font-semibold rounded-lg transition-all duration-300 ${
+                                            darkMode
+                                                ? "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400"
+                                                : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                                        }`}
+                                    >
+                                        Dashboard
+                                    </Link>
+                                    <button
+                                        onClick={handleLogoutClick}
+                                        className={`px-4 py-2 text-white font-semibold rounded-lg transition-all duration-300 ${
+                                            darkMode
+                                                ? "border-2 border-blue-400 hover:bg-blue-400/10"
+                                                : "border-2 border-blue-500 hover:bg-blue-500/20"
+                                        }`}
+                                    >
+                                        Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={() => setShowLogin(true)}
+                                        className={`px-4 py-2 text-white font-semibold rounded-lg transition-all duration-300 ${
+                                            darkMode
+                                                ? "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400"
+                                                : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                                        }`}
+                                    >
+                                        Login
+                                    </button>
+                                    <button
+                                        onClick={() => setShowRegister(true)}
+                                        className={`px-4 py-2 text-white font-semibold rounded-lg transition-all duration-300 ${
+                                            darkMode
+                                                ? "border-2 border-blue-400 hover:bg-blue-400/10"
+                                                : "border-2 border-blue-500 hover:bg-blue-500/20"
+                                        }`}
+                                    >
+                                        Daftar
+                                    </button>
+                                </>
+                            )}
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
                                 className="text-white w-10 h-10 relative focus:outline-none bg-blue-800/50 rounded-lg hover:bg-blue-700/50 transition-all duration-300"
@@ -297,7 +373,21 @@ const Navbar = () => {
                 </div>
             </nav>
 
-            {/* Modals */}
+            <LogoutConfirmModal
+                isOpen={showLogoutConfirm}
+                onClose={() => setShowLogoutConfirm(false)}
+                onConfirm={handleLogout}
+                darkMode={darkMode}
+            />
+
+            <Toast
+                message="Berhasil logout dari akun"
+                type="success"
+                isVisible={showToast}
+                onClose={() => setShowToast(false)}
+                darkMode={darkMode}
+            />
+
             {showLogin && (
                 <Login
                     isOpen={showLogin}

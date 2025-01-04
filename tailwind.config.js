@@ -52,7 +52,7 @@ module.exports = {
             },
             animation: {
                 "fade-in-down": "fade-in-down 0.5s ease-out",
-                "fade-in-up": "fade-in-up 0.5s ease-out",
+                "fade-in-up": "fade-in-up 0.3s ease-out",
                 "bounce-slow": "bounce-slow 3s infinite",
             },
         },
