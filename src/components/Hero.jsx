@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTheme } from "../context/ThemeContext";
+import Register from "./Register";
 
 const Hero = () => {
     const { darkMode } = useTheme();
+    const [showRegister, setShowRegister] = useState(false);
 
     return (
         <div
@@ -48,8 +50,8 @@ const Hero = () => {
                     </p>
                     <div className="mt-8 max-w-md mx-auto sm:flex sm:justify-center md:mt-12">
                         <div className="rounded-md shadow-2xl hover:shadow-blue-500/50 transition-all duration-300">
-                            <a
-                                href="#enroll"
+                            <button
+                                onClick={() => setShowRegister(true)}
                                 className={`w-full flex items-center justify-center px-8 py-4 text-base font-bold rounded-lg md:text-lg md:px-12 transform hover:scale-105 transition-all duration-300 ${
                                     darkMode
                                         ? "bg-white text-gray-900 hover:bg-blue-50 border-2 border-blue-200/20 hover:border-blue-200/40"
@@ -57,11 +59,19 @@ const Hero = () => {
                                 }`}
                             >
                                 Daftar Sekarang
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* Register Modal */}
+            {showRegister && (
+                <Register
+                    isOpen={showRegister}
+                    onClose={() => setShowRegister(false)}
+                />
+            )}
         </div>
     );
 };

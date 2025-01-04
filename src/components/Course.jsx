@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTheme } from "../context/ThemeContext";
+import Register from "./Register";
 
 const Course = () => {
     const { darkMode } = useTheme();
+    const [showRegister, setShowRegister] = useState(false);
 
     const courses = [
         {
@@ -91,7 +93,10 @@ const Course = () => {
                                 </div>
                             </div>
                             <div className="p-4 bg-gradient-to-r from-blue-900 to-blue-800">
-                                <button className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-500/50">
+                                <button
+                                    onClick={() => setShowRegister(true)}
+                                    className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-500/50"
+                                >
                                     Daftar Sekarang
                                 </button>
                             </div>
@@ -99,6 +104,14 @@ const Course = () => {
                     ))}
                 </div>
             </div>
+
+            {/* Register Modal */}
+            {showRegister && (
+                <Register
+                    isOpen={showRegister}
+                    onClose={() => setShowRegister(false)}
+                />
+            )}
         </section>
     );
 };
