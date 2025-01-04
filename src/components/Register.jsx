@@ -3,7 +3,7 @@ import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
 import { FcGoogle } from "react-icons/fc";
 
-const Register = ({ isOpen, onClose }) => {
+const Register = ({ isOpen, onClose, handleSwitchToLogin }) => {
     const { darkMode } = useTheme();
     const { signInWithGoogle } = useAuth();
 
@@ -185,6 +185,26 @@ const Register = ({ isOpen, onClose }) => {
                     <FcGoogle className="w-6 h-6" />
                     <span>Daftar dengan Google</span>
                 </button>
+
+                {/* Tambahan Link Login */}
+                <div className="mt-6 text-center">
+                    <p className={darkMode ? "text-gray-400" : "text-gray-600"}>
+                        Sudah punya akun?{" "}
+                        <button
+                            onClick={() => {
+                                onClose();
+                                handleSwitchToLogin();
+                            }}
+                            className={`font-semibold hover:underline transition-all duration-300 ${
+                                darkMode
+                                    ? "text-blue-400 hover:text-blue-300"
+                                    : "text-blue-600 hover:text-blue-500"
+                            }`}
+                        >
+                            Masuk Sekarang
+                        </button>
+                    </p>
+                </div>
             </div>
         </div>
     );
